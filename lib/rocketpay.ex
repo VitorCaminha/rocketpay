@@ -1,11 +1,15 @@
 defmodule Rocketpay do
   alias Rocketpay.Users.Create, as: UserCreate
 
+  alias Rocketpay.Sessions.Login
+
   alias Rocketpay.Accounts.{Deposit, Transaction, Withdraw}
 
   defdelegate create_user(params), to: UserCreate, as: :call
 
-  defdelegate deposit(params), to: Deposit, as: :call
-  defdelegate withdraw(params), to: Withdraw, as: :call
-  defdelegate transaction(params), to: Transaction, as: :call
+  defdelegate login(params), to: Login, as: :call
+
+  defdelegate deposit(params, id), to: Deposit, as: :call
+  defdelegate withdraw(params, id), to: Withdraw, as: :call
+  defdelegate transaction(params, id), to: Transaction, as: :call
 end

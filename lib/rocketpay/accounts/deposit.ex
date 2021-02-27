@@ -2,9 +2,9 @@ defmodule Rocketpay.Accounts.Deposit do
   alias Rocketpay.Accounts.Operation
   alias Rocketpay.Repo
 
-  def call(params) do
+  def call(params, id) do
     params
-    |> Operation.call(:deposit)
+    |> Operation.call(id, :deposit)
     |> run_transaction()
   end
 

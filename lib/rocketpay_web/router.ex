@@ -1,14 +1,17 @@
 defmodule RocketpayWeb.Router do
   use RocketpayWeb, :router
 
-  import Plug.BasicAuth
-
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   pipeline :auth do
-    plug :basic_auth, Application.compile_env(:rocketpay, :basic_auth)
+    plug Guardian.Plug.Pipeline,
+      module: Rocketpay.Guardian,
+      error_handler: RocketpayWeb.FallbackController
+    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.EnsureAuthenticated
+    plug Guardian.Plug.LoadResource, allow_blank: true
   end
 
   scope "/api", RocketpayWeb do
@@ -17,13 +20,15 @@ defmodule RocketpayWeb.Router do
     get "/:filename", WelcomeController, :index
 
     post "/users", UsersController, :create
+
+    post "/sessions", SessionsController, :login
   end
 
   scope "/api", RocketpayWeb do
     pipe_through [:api, :auth]
 
-    post "/accounts/:id/deposit", AccountsController, :deposit
-    post "/accounts/:id/withdraw", AccountsController, :withdraw
+    post "/accounts/deposit", AccountsController, :deposit
+    post "/accounts/withdraw", AccountsController, :withdraw
     post "/accounts/transaction", AccountsController, :transaction
   end
 
