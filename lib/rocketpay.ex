@@ -9,7 +9,7 @@ defmodule Rocketpay do
 
   defdelegate login(params), to: Login, as: :call
 
-  defdelegate deposit(params, id), to: Deposit, as: :call
-  defdelegate withdraw(params, id), to: Withdraw, as: :call
-  defdelegate transaction(params, id), to: Transaction, as: :call
+  defdelegate deposit(params, user_id), to: Deposit, as: :call
+  defdelegate withdraw(params, user_id), to: Withdraw, as: :call
+  defdelegate transaction(params, user_id), to: Transaction, as: :call
 end

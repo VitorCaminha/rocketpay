@@ -7,9 +7,9 @@ defmodule  RocketpayWeb.AccountsController do
   action_fallback RocketpayWeb.FallbackController
 
   def deposit(conn, params) do
-    id = Guardian.Plug.current_resource(conn)
+    user_id = Guardian.Plug.current_resource(conn)
 
-    with {:ok, %Account{} = account} <- Rocketpay.deposit(params, id) do
+    with {:ok, %Account{} = account} <- Rocketpay.deposit(params, user_id) do
       conn
       |> put_status(:ok)
       |> render("update.json", account: account)
@@ -17,9 +17,9 @@ defmodule  RocketpayWeb.AccountsController do
   end
 
   def withdraw(conn, params) do
-    id = Guardian.Plug.current_resource(conn)
+    user_id = Guardian.Plug.current_resource(conn)
 
-    with {:ok, %Account{} = account} <- Rocketpay.withdraw(params, id) do
+    with {:ok, %Account{} = account} <- Rocketpay.withdraw(params, user_id) do
       conn
       |> put_status(:ok)
       |> render("update.json", account: account)
@@ -27,9 +27,9 @@ defmodule  RocketpayWeb.AccountsController do
   end
 
   def transaction(conn, params) do
-    id = Guardian.Plug.current_resource(conn)
+    user_id = Guardian.Plug.current_resource(conn)
 
-    with {:ok, %TransactionResponse{} = transaction} <- Rocketpay.transaction(params, id) do
+    with {:ok, %TransactionResponse{} = transaction} <- Rocketpay.transaction(params, user_id) do
       conn
       |> put_status(:ok)
       |> render("transaction.json", transaction: transaction)

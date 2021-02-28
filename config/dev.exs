@@ -22,6 +22,10 @@ config :rocketpay, RocketpayWeb.Endpoint,
   check_origin: false,
   watchers: []
 
+config :rocketpay, Rocketpay.Guardian,
+  issuer: "rocketpay",
+  secret_key: "dev_secret"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

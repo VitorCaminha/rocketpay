@@ -33,28 +33,6 @@ defmodule RocketpayWeb.UsersViewTest do
       }
     }
 
-    assert  expected_response == response
-  end
-
-  def render("create.json", %{
-    user: %User{
-      account: %Account{id: account_id, balance: balance},
-      id: id,
-      name: name,
-      nickname: nickname
-    }
-  }) do
-    %{
-      message: "User created",
-      user: %{
-        id: id,
-        name: name,
-        nickname: nickname,
-        account: %{
-          id: account_id,
-          balance: balance
-        }
-      }
-    }
+    assert expected_response == response
   end
 end

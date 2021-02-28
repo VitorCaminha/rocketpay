@@ -3,11 +3,11 @@ defmodule Rocketpay.Accounts.Operation do
 
   alias Rocketpay.Account
 
-  def call(%{"value" => value}, id, operation) do
+  def call(%{"value" => value}, user_id, operation) do
     operation_name = account_operation_name(operation)
 
     Multi.new()
-    |> Multi.run(operation_name, fn repo, _changes -> get_account(repo, id) end)
+    |> Multi.run(operation_name, fn repo, _changes -> get_account(repo, user_id) end)
     |> Multi.run(operation, fn repo, changes ->
         account = Map.get(changes, operation_name)
 
@@ -15,8 +15,8 @@ defmodule Rocketpay.Accounts.Operation do
       end)
   end
 
-  defp get_account(repo, id) do
-    case repo.get_by(Account, user_id: id) do
+  defp get_account(repo, user_id) do
+    case repo.get_by(Account, user_id: user_id) do
       nil -> {:error, "Account not found!"}
       account -> {:ok, account}
     end
@@ -30,17 +30,18 @@ defmodule Rocketpay.Accounts.Operation do
 
   defp operation(%Account{balance: balance}, value, operation) do
     value
-    |> check_if_negative()
     |> Decimal.cast()
+    |> check_if_negative()
     |> handle_cast(balance, operation)
   end
 
-  defp check_if_negative(value) do
+  defp check_if_negative({:ok, value}) do
     case Decimal.compare(value, 0) do
-      :gt -> value
+      :gt -> {:ok, value}
       _ -> :error
     end
   end
+  defp check_if_negative(:error), do: :error
 
   defp handle_cast({:ok, value}, balance, :deposit), do: Decimal.add(balance, value)
   defp handle_cast({:ok, value}, balance, :withdraw), do: Decimal.sub(balance, value)

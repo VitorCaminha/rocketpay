@@ -20,3 +20,7 @@ config :rocketpay, RocketpayWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :rocketpay, Rocketpay.Guardian,
+  issuer: "rocketpay",
+  secret_key: "test_secret"
